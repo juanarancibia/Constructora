@@ -1,14 +1,14 @@
-import { db } from "../firebase-config";
 import {
-  collection,
-  getDocs,
   addDoc,
+  collection,
   deleteDoc,
   doc,
+  getDocs,
   Timestamp,
 } from "@firebase/firestore";
-import { Budgetable, Area } from "../models/project.model";
 import { getUserFromCookie } from "../auth/userCookie";
+import { db } from "../firebase-config";
+import { Area, Budgetable } from "../models/project.model";
 
 export const getUserId = () => {
   const user: {
@@ -16,7 +16,7 @@ export const getUserId = () => {
     email: string;
   } = getUserFromCookie();
 
-  return user.id;
+  return user?.id;
 };
 
 export const postExpense = async (expense: any) => {

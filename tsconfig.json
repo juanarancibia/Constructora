@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "auth/useUser.js", "auth/useUser.js", "firebase-config.js", "pages/login/index.jsx", "auth/userCookie.js", "pages/index.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "auth/useUser.js", "auth/useUser.js", "firebase-config.js", "pages/login/index.jsx", "auth/userCookie.js", "pages/index.jsx", "shared/hooks/UserIDContext.jsx"],
   "exclude": ["node_modules"]
 }

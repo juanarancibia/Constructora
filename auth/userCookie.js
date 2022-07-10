@@ -1,7 +1,7 @@
 import cookies from "js-cookie";
 
 export const getUserFromCookie = () => {
-  const cookie = cookies.get("auth");
+  const cookie = cookies.get("__session");
   if (!cookie) {
     return;
   }
@@ -9,9 +9,9 @@ export const getUserFromCookie = () => {
 };
 
 export const setUserCookie = (user) => {
-  cookies.set("auth", JSON.stringify(user), {
+  cookies.set("__session", JSON.stringify(user), {
     expires: 1 / 24,
   });
 };
 
-export const removeUserCookie = () => cookies.remove("auth");
+export const removeUserCookie = () => cookies.remove("__session");
