@@ -1,16 +1,39 @@
-html,
-body {
-  padding: 0;
+.flex-container {
+  position: relative;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.flex-center {
+  justify-self: center;
+  align-items: center;
+}
+
+.login {
+  padding: 1em;
+  background-color: #b5c8d565;
+}
+
+body {
+  background-color: #a9bdca;
+}
+
+login-text {
+  color: #8c9ea3;
 }
 
 * {
-  box-sizing: border-box;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+html,
+body,
+body > div:first-child,
+div#__next,
+div#__next > div {
+  height: 98%;
 }
