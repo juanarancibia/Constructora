@@ -10,6 +10,7 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
+import { getAuth } from "firebase/auth";
 import { ReactNode, useEffect, useState } from "react";
 import { db } from "../firebase-config";
 import { Payment } from "../models/payment.model";
@@ -45,16 +46,18 @@ export default function PaymentsModal({ onSubmit }: props) {
   const { loading, setLoading } = useLoading();
 
   useEffect(() => {
-    const q = query(collection(db, "project"), where("uid", "==", getUserId()));
+    getAuth().onAuthStateChanged((user) => {
+      const q = query(collection(db, "project"), where("uid", "==", user?.uid));
 
-    onSnapshot(q, (querySnapshot) => {
-      setProjects(
-        querySnapshot.docs.map(
-          (doc: any): Budgetable => ({
-            ...doc.data(),
-          })
-        )
-      );
+      onSnapshot(q, (querySnapshot) => {
+        setProjects(
+          querySnapshot.docs.map(
+            (doc: any): Budgetable => ({
+              ...doc.data(),
+            })
+          )
+        );
+      });
     });
   }, []);
 

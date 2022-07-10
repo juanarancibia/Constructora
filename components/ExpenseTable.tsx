@@ -19,6 +19,7 @@ import { db } from "../firebase-config";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteExpense, getUserId } from "../services/firebase";
 import { Expense } from "../models/expense.model";
+import { getAuth } from "firebase/auth";
 const columns = [
   { field: "customId", headerName: "Id", width: 50 },
   { field: "project", headerName: "Obra", width: 150 },
@@ -49,22 +50,24 @@ export default function ExpenseTable() {
   const [selectionModel, setSelectionModel] = React.useState([] as string[]);
 
   useEffect(() => {
-    const q = query(
-      collection(db, "expenses"),
-      where("uid", "==", getUserId()),
-      orderBy("date", "desc")
-    );
-
-    onSnapshot(q, (querySnapshot) => {
-      setExpenses(
-        querySnapshot.docs.map(
-          (doc: any, index: number): Expense => ({
-            ...doc.data(),
-            id: doc.id,
-            customId: (index += 1),
-          })
-        )
+    getAuth().onAuthStateChanged((user) => {
+      const q = query(
+        collection(db, "expenses"),
+        where("uid", "==", user?.uid),
+        orderBy("date", "desc")
       );
+
+      onSnapshot(q, (querySnapshot) => {
+        setExpenses(
+          querySnapshot.docs.map(
+            (doc: any, index: number): Expense => ({
+              ...doc.data(),
+              id: doc.id,
+              customId: (index += 1),
+            })
+          )
+        );
+      });
     });
   }, []);
 

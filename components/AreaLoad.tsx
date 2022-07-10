@@ -10,27 +10,30 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
+import { getAuth } from "firebase/auth";
 import { ReactNode, useEffect, useState } from "react";
 import { db } from "../firebase-config";
 import { CATEGORIES } from "../models/const/categories.const";
-import { Budgetable, Area } from "../models/project.model";
-import { getUserId, postArea } from "../services/firebase";
+import { Area, Budgetable } from "../models/project.model";
+import { postArea } from "../services/firebase";
 
 export default function AreaLoad() {
   const [area, setArea] = useState({} as Area);
   const [projects, setProjects] = useState([] as Budgetable[]);
 
   useEffect(() => {
-    const q = query(collection(db, "project"), where("uid", "==", getUserId()));
+    getAuth().onAuthStateChanged((user) => {
+      const q = query(collection(db, "project"), where("uid", "==", user?.uid));
 
-    onSnapshot(q, (querySnapshot) => {
-      setProjects(
-        querySnapshot.docs.map(
-          (doc: any): Budgetable => ({
-            ...doc.data(),
-          })
-        )
-      );
+      onSnapshot(q, (querySnapshot) => {
+        setProjects(
+          querySnapshot.docs.map(
+            (doc: any): Budgetable => ({
+              ...doc.data(),
+            })
+          )
+        );
+      });
     });
   }, []);
 

@@ -18,6 +18,7 @@ import {
 import { deletePayment, getUserId } from "../services/firebase";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Button } from "@mui/material";
+import { getAuth } from "firebase/auth";
 
 const columns = [
   { field: "customId", headerName: "Id", width: 50 },
@@ -46,22 +47,24 @@ export default function PaymentsTable() {
   const [selectionModel, setSelectionModel] = useState([] as string[]);
 
   useEffect(() => {
-    const q = query(
-      collection(db, "payments"),
-      where("uid", "==", getUserId()),
-      orderBy("date", "desc")
-    );
-
-    onSnapshot(q, (querySnapshot) => {
-      setPayments(
-        querySnapshot.docs.map(
-          (doc: any, index: number): Payment => ({
-            ...doc.data(),
-            id: doc.id,
-            customId: (index += 1),
-          })
-        )
+    getAuth().onAuthStateChanged((user) => {
+      const q = query(
+        collection(db, "payments"),
+        where("uid", "==", user?.uid),
+        orderBy("date", "desc")
       );
+
+      onSnapshot(q, (querySnapshot) => {
+        setPayments(
+          querySnapshot.docs.map(
+            (doc: any, index: number): Payment => ({
+              ...doc.data(),
+              id: doc.id,
+              customId: (index += 1),
+            })
+          )
+        );
+      });
     });
   }, []);
 

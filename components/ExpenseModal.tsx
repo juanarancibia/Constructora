@@ -17,6 +17,7 @@ import { Area, Budgetable } from "../models/project.model";
 import { collection, onSnapshot, query, where } from "@firebase/firestore";
 import { getUserId, postExpense as postExpense } from "../services/firebase";
 import { useLoading } from "../shared/hooks/LoadingContext";
+import { getAuth } from "firebase/auth";
 
 type props = {
   onSubmit: () => void;
@@ -40,30 +41,34 @@ export default function ExpenseModal({ onSubmit }: props) {
   const { loading, setLoading } = useLoading();
 
   useEffect(() => {
-    const q = query(collection(db, "area"), where("uid", "==", getUserId()));
+    getAuth().onAuthStateChanged((user) => {
+      const q = query(collection(db, "area"), where("uid", "==", user?.uid));
 
-    onSnapshot(q, (querySnapshot) => {
-      setArea(
-        querySnapshot.docs.map(
-          (doc: any): Area => ({
-            ...doc.data(),
-          })
-        )
-      );
+      onSnapshot(q, (querySnapshot) => {
+        setArea(
+          querySnapshot.docs.map(
+            (doc: any): Area => ({
+              ...doc.data(),
+            })
+          )
+        );
+      });
     });
   }, []);
 
   useEffect(() => {
-    const q = query(collection(db, "project"), where("uid", "==", getUserId()));
+    getAuth().onAuthStateChanged((user) => {
+      const q = query(collection(db, "project"), where("uid", "==", user?.uid));
 
-    onSnapshot(q, (querySnapshot) => {
-      setProjects(
-        querySnapshot.docs.map(
-          (doc: any): Budgetable => ({
-            ...doc.data(),
-          })
-        )
-      );
+      onSnapshot(q, (querySnapshot) => {
+        setProjects(
+          querySnapshot.docs.map(
+            (doc: any): Budgetable => ({
+              ...doc.data(),
+            })
+          )
+        );
+      });
     });
   }, []);
 

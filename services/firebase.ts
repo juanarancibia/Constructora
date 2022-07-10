@@ -6,6 +6,7 @@ import {
   getDocs,
   Timestamp,
 } from "@firebase/firestore";
+import { getAuth } from "firebase/auth";
 import { getUserFromCookie } from "../auth/userCookie";
 import { db } from "../firebase-config";
 import { Area, Budgetable } from "../models/project.model";
@@ -27,7 +28,12 @@ export const postExpense = async (expense: any) => {
     : Timestamp.fromDate(new Date(Date.now()));
   const expensesCollectionRef = collection(db, "expenses");
 
-  return await addDoc(expensesCollectionRef, { ...expense, uid: getUserId() });
+  getAuth().onAuthStateChanged((user) => {
+    addDoc(expensesCollectionRef, {
+      ...expense,
+      uid: user?.uid,
+    });
+  });
 };
 
 export const deleteExpense = async (expenseId: string) => {
@@ -38,7 +44,9 @@ export const deleteExpense = async (expenseId: string) => {
 export const postProject = async (project: Budgetable) => {
   const projectCollectionRef = collection(db, "project");
 
-  return await addDoc(projectCollectionRef, { ...project, uid: getUserId() });
+  getAuth().onAuthStateChanged((user) => {
+    addDoc(projectCollectionRef, { ...project, uid: user?.uid });
+  });
 };
 
 export const getProjects = async () => {
@@ -50,7 +58,9 @@ export const getProjects = async () => {
 export const postArea = async (area: Area) => {
   const areaCollectionRef = collection(db, "area");
 
-  return await addDoc(areaCollectionRef, { ...area, uid: getUserId() });
+  getAuth().onAuthStateChanged((user) => {
+    addDoc(areaCollectionRef, { ...area, uid: user?.uid });
+  });
 };
 
 export const postPayment = async (payment: any) => {
@@ -61,7 +71,9 @@ export const postPayment = async (payment: any) => {
     : Timestamp.fromDate(new Date(Date.now()));
   const paymentsCollectionRef = collection(db, "payments");
 
-  return await addDoc(paymentsCollectionRef, { ...payment, uid: getUserId() });
+  getAuth().onAuthStateChanged((user) => {
+    addDoc(paymentsCollectionRef, { ...payment, uid: user?.uid });
+  });
 };
 
 export const deletePayment = async (paymentId: string) => {
